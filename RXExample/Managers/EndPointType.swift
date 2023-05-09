@@ -30,11 +30,11 @@ enum RequestType {
     case getCharacters
     case getLocations
     case getEpisodes
+    case getSingleEpisode(_ id: Int)
     case downloadImage(_ imagePath: String)
 }
 
 extension RequestType: EndPointType {
-   
     var baseURL: String {
         switch APIMangger.enviroment {
         case .dev: return "https://rickandmortyapi.com/api/"
@@ -47,6 +47,7 @@ extension RequestType: EndPointType {
         case .getCharacters: return "character"
         case .getLocations: return "location"
         case .getEpisodes: return "episodes"
+        case .getSingleEpisode(let id): return "episode/\(id)"
         case .downloadImage(let imagePath): return imagePath
         }
     }

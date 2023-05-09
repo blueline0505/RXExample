@@ -13,7 +13,6 @@ import RxCocoa
 class RMCharacterViewModel: ViewModel {
     
     // MARK: Inputs
-    
     let input: Input
     
     struct Input {
@@ -23,7 +22,6 @@ class RMCharacterViewModel: ViewModel {
     private let viewDidRefreshSubject = PublishSubject<Void>()
     
     // MARK: Outputs
-    
     let output: Output
     
     struct Output {
@@ -37,10 +35,8 @@ class RMCharacterViewModel: ViewModel {
     
     // MARK: Private properties
     private let charactersSubject = PublishSubject<[Character]>()
-    private let disposeBag = DisposeBag()
     
     // MARK: Initialisation
-    
     init() {
         let errorRelay = PublishRelay<ErrorType>()
         input = Input(viewDidRefresh: viewDidRefreshSubject.asObserver())

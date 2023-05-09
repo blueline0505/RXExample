@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="RMCharacterPhotoCollectionViewCell" id="vVB-DU-P3S" customClass="RMCharacterPhotoCollectionViewCell" customModule="RXExample" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Xlo-fW-4jT">
+                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gyT-b1-HdH">
+                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="gyT-b1-HdH" firstAttribute="top" secondItem="Xlo-fW-4jT" secondAttribute="top" id="6mx-N7-n5D"/>
+                    <constraint firstAttribute="trailing" secondItem="gyT-b1-HdH" secondAttribute="trailing" id="Ly2-7r-8C0"/>
+                    <constraint firstItem="gyT-b1-HdH" firstAttribute="leading" secondItem="Xlo-fW-4jT" secondAttribute="leading" id="VSc-8Z-685"/>
+                    <constraint firstAttribute="bottom" secondItem="gyT-b1-HdH" secondAttribute="bottom" id="vv0-FW-S5O"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="iconImageView" destination="gyT-b1-HdH" id="374-dj-Tuc"/>
+            </connections>
+            <point key="canvasLocation" x="76" y="20"/>
+        </collectionViewCell>
+    </objects>
+</document>

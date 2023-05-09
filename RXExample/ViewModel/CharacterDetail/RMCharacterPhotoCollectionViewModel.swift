@@ -1,8 +1,8 @@
 //
-//  CharacterTableViewCellViewModel.swift
+//  RMCharacterPhotoCollectionViewModel.swift
 //  RXExample
 //
-//  Created by DAVIDPAN on 2023/1/13.
+//  Created by DAVIDPAN on 2023/2/8.
 //
 
 import Foundation
@@ -10,7 +10,7 @@ import UIKit.UIImage
 import RxSwift
 import RxCocoa
 
-class CharacterTableViewCellViewModel: ViewModel {
+class RMCharacterPhotoCollectionViewModel: ViewModel {
     
     // MARK: Input
     let input: Input
@@ -30,10 +30,8 @@ class CharacterTableViewCellViewModel: ViewModel {
     
     // MARK: Private properties
     private let downloadImageSubject = PublishSubject<UIImage?>()
-    private let disposeBag = DisposeBag()
     
     // MARK: Initialisation
-    
     init() {
         input = Input(imagePathObserver: imageSubject.asObserver())
         
@@ -41,6 +39,6 @@ class CharacterTableViewCellViewModel: ViewModel {
             .flatMap({ try APIMangger.shared().downloadImage($0) })
             .asDriver(onErrorJustReturn: nil)
         
-        output = Output(downloadImage: downloadImageSubject.asDriver(onErrorJustReturn: nil))
+        output = Output(downloadImage: downloadImageSubject)
     }
 }

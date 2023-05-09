@@ -38,6 +38,16 @@ class APIMangger {
         }
     }
     
+    func getSingleEpisode(_ id: Int) throws -> Observable<RMEpisodeResponse> {
+        let type = RequestType.getSingleEpisode(id)
+        var request = URLRequest(url: type.url)
+        request.httpMethod = type.method.rawValue
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        return apiRequest.callRequest(request: request).map{(data: RMEpisodeResponse) in
+            return data
+        }
+    }
+    
     func downloadImage(_ imagePath: String) throws -> Observable<UIImage?> {
         let type = RequestType.downloadImage(imagePath)
         if let image = imageCache.object(forKey: type.url as NSURL) {

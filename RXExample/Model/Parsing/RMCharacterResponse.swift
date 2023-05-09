@@ -50,7 +50,6 @@ enum RMCharacterGender: String, Decodable {
 }
 
 // MARK: - CodingKeys
-
 extension RMCharacterOrigin {
     enum CodingKeys: CodingKey {
         case name
@@ -115,7 +114,6 @@ extension RMCharacterResponse {
 }
 
 // MARK: - Helper methods
-
 extension RMCharacterResponse {
     func getData() -> [Character] {
         return self.data.map({ Character(id: $0.id,

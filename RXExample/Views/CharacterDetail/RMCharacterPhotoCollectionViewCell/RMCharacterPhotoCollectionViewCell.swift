@@ -1,38 +1,33 @@
 //
-//  CharacterTableViewCell.swift
+//  RMCharacterPhotoCollectionViewCell.swift
 //  RXExample
 //
-//  Created by DAVIDPAN on 2022/12/30.
+//  Created by DAVIDPAN on 2023/2/2.
 //
 
 import UIKit
 import RxSwift
 
-class CharacterTableViewCell: UITableViewCell {
+class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
     // MARK: Identifier
-    static let identifier = "CharacterTableViewCell"
+    static let identifier = "RMCharacterPhotoCollectionViewCell"
     
     // MARK: Dependencies
-    var viewModel = CharacterTableViewCellViewModel()
+    private var viewModel = RMCharacterPhotoCollectionViewModel()
     
     // MARK: Outlets
     @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var subtitleLabel: UILabel!
     
     // MARK: Private Properties
     private let imageSubject = PublishSubject<String>()
     private let disposeBag = DisposeBag()
     
     override func awakeFromNib() {
-        super.awakeFromNib()
         bindViewModel()
     }
     
-    func setDataWithValue(_ character: Character) {
-        titleLabel.text = character.name
-        subtitleLabel.text = character.gender.rawValue
-        imageSubject.onNext(character.imagePath)
+    func setDataWithValue(_ imagePath: String) {
+        imageSubject.onNext(imagePath)
     }
     
     func bindViewModel() {

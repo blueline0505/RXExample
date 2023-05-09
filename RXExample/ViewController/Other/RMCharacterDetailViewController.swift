@@ -42,7 +42,7 @@ class RMCharacterDetailViewController: BaseViewController {
                 return cell
             case .EpisoItem(let data):
                 guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RMCharacterEpisodeCollectionViewCell.identifier, for: indexPath) as? RMCharacterEpisodeCollectionViewCell else { return UICollectionViewCell() }
-                cell.setDataWithValue(data)
+                //cell.setDataWithValue(data)
                 return cell
             }
         })

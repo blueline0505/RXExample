@@ -39,12 +39,12 @@ class RMCharacterEpisodeCollectionViewModel: ViewModel {
 //                return Driver.just([])
 //            }
         
-        let responseSubject = pathSubjcet
-            .flatMap({ try APIMangger.shared().})
+//        let responseSubject = pathSubjcet
+//            .flatMap({ try APIMangger.shared().})
         
-        output = Output(characters: characters,
-                        isLoading: isLoadingSubject.asDriver(onErrorJustReturn: false),
-                        error: errorSubject.asDriver(onErrorJustReturn: ErrorType.ERROR_INVAILD_OTHER_FAILLURE))
+//        output = Output(characters: characters,
+//                        isLoading: isLoadingSubject.asDriver(onErrorJustReturn: false),
+//                        error: errorSubject.asDriver(onErrorJustReturn: ErrorType.ERROR_INVAILD_OTHER_FAILLURE))
         
         output = Output()
     }

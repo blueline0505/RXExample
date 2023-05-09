@@ -60,18 +60,18 @@ extension RMEpisodeResponse {
 
 // MARK: - Helper methods
 extension RMEpisodeResponse { // TODO: convert Episode
-    func getData() -> [Character] {
-        return self.data.map({ Character(id: $0.id,
-                                         name: $0.name,
-                                         status: $0.status,
-                                         species: $0.species,
-                                         type: $0.type,
-                                         gender: $0.gender,
-                                         origin: $0.origin,
-                                         location: $0.location,
-                                         imagePath: $0.imagePath,
-                                         episode: $0.episode,
-                                         url: $0.url,
-                                         created: $0.created)})
-    }
+//    func getData() -> [Character] {
+//        return self.data.map({ Character(id: $0.id,
+//                                         name: $0.name,
+//                                         status: $0.status,
+//                                         species: $0.species,
+//                                         type: $0.type,
+//                                         gender: $0.gender,
+//                                         origin: $0.origin,
+//                                         location: $0.location,
+//                                         imagePath: $0.imagePath,
+//                                         episode: $0.episode,
+//                                         url: $0.url,
+//                                         created: $0.created)})
+//    }
 }

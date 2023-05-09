@@ -9,7 +9,8 @@ target 'RXExample' do
     pod 'RxSwift', '6.5.0'
     pod 'RxCocoa', '6.5.0'
     pod 'Moya/RxSwift'
-
+    pod 'RxDataSources', '~> 5.0'
+    
   target 'RXExampleTests' do
     inherit! :search_paths
     # Pods for testing

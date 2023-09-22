@@ -22,6 +22,8 @@
 		152C9769295EBE3900B0CBBC /* RMCharacterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152C9768295EBE3900B0CBBC /* RMCharacterViewModel.swift */; };
 		152C976C295EBED300B0CBBC /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152C976B295EBED300B0CBBC /* ViewModel.swift */; };
 		152C9770295EC9B500B0CBBC /* CharacterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152C976E295EC9B500B0CBBC /* CharacterTableViewCell.swift */; };
+		152F7DF42ABD45D0003A1EF1 /* IMG_2345.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 152F7DF22ABD45CF003A1EF1 /* IMG_2345.PNG */; };
+		152F7DF52ABD45D0003A1EF1 /* IMG_2344.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 152F7DF32ABD45D0003A1EF1 /* IMG_2344.PNG */; };
 		153132E12A0398FD000E0D30 /* Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153132E02A0398FD000E0D30 /* Methods.swift */; };
 		153132E32A03998F000E0D30 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153132E22A03998F000E0D30 /* String+Extension.swift */; };
 		153132E52A03A538000E0D30 /* RMCharacterEpisodeCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153132E42A03A538000E0D30 /* RMCharacterEpisodeCollectionViewModel.swift */; };
@@ -94,6 +96,8 @@
 		152C9768295EBE3900B0CBBC /* RMCharacterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCharacterViewModel.swift; sourceTree = "<group>"; };
 		152C976B295EBED300B0CBBC /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		152C976E295EC9B500B0CBBC /* CharacterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterTableViewCell.swift; sourceTree = "<group>"; };
+		152F7DF22ABD45CF003A1EF1 /* IMG_2345.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_2345.PNG; sourceTree = "<group>"; };
+		152F7DF32ABD45D0003A1EF1 /* IMG_2344.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_2344.PNG; sourceTree = "<group>"; };
 		153132E02A0398FD000E0D30 /* Methods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Methods.swift; sourceTree = "<group>"; };
 		153132E22A03998F000E0D30 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		153132E42A03A538000E0D30 /* RMCharacterEpisodeCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMCharacterEpisodeCollectionViewModel.swift; sourceTree = "<group>"; };
@@ -166,6 +170,7 @@
 		15054A9829597B90005A134B = {
 			isa = PBXGroup;
 			children = (
+				152F7DF12ABD45AC003A1EF1 /* result */,
 				156B47702A09E9E0004965B7 /* .gitignore */,
 				15054AA329597B90005A134B /* RXExample */,
 				15054ABA29597B94005A134B /* RXExampleTests */,
@@ -268,6 +273,15 @@
 				15235804295ECA1200B94EE6 /* CharacterTableViewCell.xib */,
 			);
 			path = CharacterTableViewCell;
+			sourceTree = "<group>";
+		};
+		152F7DF12ABD45AC003A1EF1 /* result */ = {
+			isa = PBXGroup;
+			children = (
+				152F7DF32ABD45D0003A1EF1 /* IMG_2344.PNG */,
+				152F7DF22ABD45CF003A1EF1 /* IMG_2345.PNG */,
+			);
+			path = result;
 			sourceTree = "<group>";
 		};
 		153132DF2A0398EC000E0D30 /* Utils */ = {
@@ -416,7 +430,6 @@
 				8A0A5BEA00A20C6A9C68B33E /* Pods-RXExampleTests.debug.xcconfig */,
 				2E5584F8817D4E89BF114DCC /* Pods-RXExampleTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -532,7 +545,9 @@
 			files = (
 				156B47712A09E9E0004965B7 /* .gitignore in Resources */,
 				15054AB129597B94005A134B /* LaunchScreen.storyboard in Resources */,
+				152F7DF52ABD45D0003A1EF1 /* IMG_2344.PNG in Resources */,
 				15EE827A299353D800C821A2 /* RMCharacterEpisodeCollectionViewCell.xib in Resources */,
+				152F7DF42ABD45D0003A1EF1 /* IMG_2345.PNG in Resources */,
 				15EE827C299353FF00C821A2 /* RMCharacterInfoCollectionViewCell.xib in Resources */,
 				15AD00A729934E0100DBB2E1 /* RMCharacterPhotoCollectionViewCell.xib in Resources */,
 				15054AAE29597B94005A134B /* Assets.xcassets in Resources */,

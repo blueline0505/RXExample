@@ -1,8 +1,9 @@
-## 仿製 Build FULL iOS (RXSwift + MVVM練習)
-* 框架: MVVM + RXSwift
+## Rick And Morty App 
+* 目的: Build FULL iOS (RXSwift + MVVM練習)  
+* 框架: MVVM + RXSwift  
 * 語言: Swift
-* 主題參考，[iOS Academy](https://www.youtube.com/@iOSAcademy/featured)-**Build FULL iOS App in Swift**
-* 學習內容:
+* 主題參考: [iOS Academy](https://www.youtube.com/@iOSAcademy/featured)-**Build FULL iOS App in Swift**
+* 學習內容:  
   -熟悉RXSwift方式，連動CollectionView、TableView  
   -下載網路圖片，並顯示  
   -使用到library: RXDataSouce、Moya  

@@ -23,6 +23,7 @@ class APIRequest {
                 guard let httpResponse = response as? HTTPURLResponse else {
                     return observer.onError(error!)
                 }
+                
                 let statusCode = httpResponse.statusCode
                 guard (200...399).contains(statusCode) else {
                     observer.onError(error!)

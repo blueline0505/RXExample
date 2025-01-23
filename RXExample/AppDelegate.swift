@@ -12,13 +12,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let rootController = storyBoard.instantiateViewController(withIdentifier: MainTabBarViewController.identifier) as!
-        MainTabBarViewController
-        
-        window?.rootViewController = rootController
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = MainTabBarViewController()
         window?.makeKeyAndVisible()
         
         return true

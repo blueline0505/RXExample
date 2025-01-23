@@ -42,7 +42,8 @@ class MainTabBarViewController: UITabBarController {
     }
     
     func setupViewController() {
-        let rmCharacter = addChildViewController(initViewController(RMCharacterViewController.identifier),
+        /*
+         let rmCharacter = addChildViewController(initViewController(RMCharacterViewController.identifier),
                                                  "Characters", "person", 0)
         let rmLocation = addChildViewController(initViewController(RMLocationViewController.identifier),
                                                 "Locations", "location.fill", 1)
@@ -50,7 +51,12 @@ class MainTabBarViewController: UITabBarController {
                                                 "Episodes", "doc.fill", 2)
         let rmSettings = addChildViewController(initViewController(RMSettingsViewController.identifier),
                                                 "Settings", "gearshape", 3)
-        viewControllers = [rmCharacter, rmLocation, rmEpisodes, rmSettings]
+        */
+        
+        let characterList = addChildViewController(CharacterListViewController(), "Characters", "person", 0)
+        viewControllers = [characterList]
+        
+        //viewControllers = [characterList, rmLocation, rmEpisodes, rmSettings]
     }
     
     func initViewController(_ named: String) -> UIViewController {
@@ -60,7 +66,7 @@ class MainTabBarViewController: UITabBarController {
     }
     
     func addChildViewController(_ childViewController: UIViewController,_ title: String,_ imageName: String,_ tag: Int) -> UINavigationController {
-        let navigationViewController = MainNavigationController(rootViewController: childViewController)
+        let navigationViewController = UINavigationController(rootViewController: childViewController)
         navigationViewController.navigationBar.topItem?.title = title
         let image = UIImage(systemName: imageName)
         let tabBarItem = UITabBarItem(title: title, image: image, tag: tag)

@@ -10,7 +10,7 @@ import UIKit.UIImage
 import RxSwift
 import RxCocoa
 
-class CharacterTableViewCellViewModel: ViewModel {
+class CharacterListTableCellViewModel: ViewModel {
     
     // MARK: Input
     let input: Input

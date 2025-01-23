@@ -10,7 +10,7 @@ import UIKit.UIImage
 import RxSwift
 import RxCocoa
 
-class RMCharacterViewModel: ViewModel {
+class CharacterListViewModel: ViewModel {
     
     // MARK: Inputs
     let input: Input
@@ -36,6 +36,8 @@ class RMCharacterViewModel: ViewModel {
     // MARK: Private properties
     private let charactersSubject = PublishSubject<[Character]>()
     
+    
+    
     // MARK: Initialisation
     init() {
         let errorRelay = PublishRelay<ErrorType>()
@@ -47,6 +49,9 @@ class RMCharacterViewModel: ViewModel {
             .asObservable()
             .startLoading(loadingSubject: isLoadingSubject)
             .flatMapLatest({ try APIMangger.shared().getCharacters()})
+            .catchErrorCode(completion: { errorType in
+                print("DEBUG: errorType: \(errorType)")
+            })
             .stopLoading(loadingSubject: isLoadingSubject)
             .asDriver {(error) -> Driver<[Character]> in
                 errorRelay.accept((error as? ErrorType) ?? ErrorType.ERROR_INVAILD_OTHER_FAILLURE )

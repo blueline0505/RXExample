@@ -18,6 +18,20 @@ class CharacterListViewController: BaseViewController {
     var viewModel = CharacterListViewModel()
     
     // MARK: Outlets
+    private let searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.placeholder = "Search Character"
+        searchController.obscuresBackgroundDuringPresentation = false
+        return searchController
+    }()
+    
+    private lazy var rightButtonItem: UIBarButtonItem = {
+        let buttonItem = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3.decrease.circle"),
+                                         style: .plain,
+                                         target: nil,
+                                         action: nil)
+        return buttonItem
+    }()
     
     private lazy var aliveTitleLabel: UILabel = {
         let label = UILabel()
@@ -37,20 +51,20 @@ class CharacterListViewController: BaseViewController {
         return label
     }()
     
-    private lazy var characterCollectionView: UICollectionView = {
+    private lazy var aliveCharacterCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: self.view.bounds,
                                               collectionViewLayout: CharacterListCollectionFlowLayout())
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(AliveCollectionCell.self,
-                                forCellWithReuseIdentifier: AliveCollectionCell.reuseIdentifier)
+        collectionView.register(AliveCharacterCollectionCell.self,
+                                forCellWithReuseIdentifier: AliveCharacterCollectionCell.reuseIdentifier)
         return collectionView
     }()
     
-    private lazy var otherTableView: UITableView = {
+    private lazy var otherCharacterTableView: UITableView = {
         let tableView = UITableView(frame: self.view.bounds, style: .plain)
-        tableView.backgroundColor = .fillNavy
-        
+        tableView.register(OtherCharacterTableCell.self, forCellReuseIdentifier: OtherCharacterTableCell.reuseIdentifier)
+        tableView.backgroundColor = .clear
         return tableView
     }()
     
@@ -62,17 +76,20 @@ class CharacterListViewController: BaseViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        refreshControlValueChanged()
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
         bindViewModel()
+        refreshControlValueChanged()
     }
     
     // MARK: Methods
     func initView() {
+    
+        navigationItem.rightBarButtonItem = rightButtonItem
         
         view.addSubview(aliveTitleLabel)
         aliveTitleLabel.snp.makeConstraints { make in
@@ -81,8 +98,8 @@ class CharacterListViewController: BaseViewController {
             make.right.equalTo(view.safeAreaLayoutGuide).offset(-8)
         }
         
-        view.addSubview(characterCollectionView)
-        characterCollectionView.snp.makeConstraints { make in
+        view.addSubview(aliveCharacterCollectionView)
+        aliveCharacterCollectionView.snp.makeConstraints { make in
             make.top.equalTo(aliveTitleLabel.snp.bottom).offset(16)
             make.left.equalTo(view.safeAreaLayoutGuide)
             make.right.equalTo(view.safeAreaLayoutGuide)
@@ -91,20 +108,21 @@ class CharacterListViewController: BaseViewController {
         
         view.addSubview(otheritleLabel)
         otheritleLabel.snp.makeConstraints { make in
-            make.top.equalTo(characterCollectionView.snp.bottom).offset(16)
+            make.top.equalTo(aliveCharacterCollectionView.snp.bottom).offset(16)
             make.left.equalTo(view.safeAreaLayoutGuide).offset(8)
             make.right.equalTo(view.safeAreaLayoutGuide).offset(-8)
         }
         
-        view.addSubview(otherTableView)
-        otherTableView.snp.makeConstraints { make in
+        view.addSubview(otherCharacterTableView)
+        otherCharacterTableView.snp.makeConstraints { make in
             make.top.equalTo(otheritleLabel.snp.bottom).offset(16)
             make.left.equalTo(view.safeAreaLayoutGuide)
             make.right.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalToSuperview()
         }
         
-        
+        otherCharacterTableView.estimatedRowHeight = 140
+        otherCharacterTableView.rowHeight = UITableView.automaticDimension
     }
     
     func bindViewModel() {
@@ -115,37 +133,53 @@ class CharacterListViewController: BaseViewController {
         
         // Outputs
         
+        // - rightBarItem
+        
+        rightButtonItem.rx.tap
+            .subscribe(onNext: {[weak self] in
+                self?.showFilterViewController()
+            }).disposed(by: disposeBag)
+        
         // - CollectionView
-        viewModel.output.characters
-            .drive(characterCollectionView.rx.items(cellIdentifier: AliveCollectionCell.reuseIdentifier.self,
-                                                    cellType: AliveCollectionCell.self)) {(row, data, cell) in
+        viewModel.output.aliveCharacters
+            .drive(aliveCharacterCollectionView.rx.items(cellIdentifier: AliveCharacterCollectionCell.reuseIdentifier.self,
+                                                    cellType: AliveCharacterCollectionCell.self)) {(row, data, cell) in
                 cell.configure(with: data)
             }
             .disposed(by: disposeBag)
         
-        characterCollectionView.rx.willDisplayCell
+        aliveCharacterCollectionView.rx.willDisplayCell
             .subscribe(onNext: ({ (cell, indexPath) in
-                self.fadeInOut(with: cell)
+                cell.setAnimation(y: -250)
             }))
             .disposed(by: disposeBag)
         
-        
-        /*
         // - TableView
-        viewModel.output.characters
-            .drive(characterTableView.rx.items(cellIdentifier: CharacterListTableCell.identifier,
-                                               cellType: CharacterListTableCell.self)) {(row, data, cell) in
-                cell.setDataWithValue(data)
+        viewModel.output.otherCharacters
+            .drive(otherCharacterTableView.rx.items(cellIdentifier: OtherCharacterTableCell.reuseIdentifier,
+                                                    cellType: OtherCharacterTableCell.self)) {(row, data, cell) in
+                cell.configure(with: data)
             }.disposed(by: disposeBag)
         
-        characterTableView.rx.modelSelected(Character.self)
-            .subscribe(onNext: { [unowned self] item in
-                self.showDetailViewController(item)
+        otherCharacterTableView.rx.willDisplayCell
+            .subscribe(onNext: ({ (cell, indexPath) in
+                cell.setAnimation(x: -250)
+            })).disposed(by: disposeBag)
+        
+        otherCharacterTableView.rx.modelSelected(Character.self)
+            .subscribe(onNext: { [weak self] item in
+                self?.showDetailViewController(with: item)
             }).disposed(by: disposeBag)
+        
         // - Loading
-        viewModel.output.isLoading.drive(onNext: { [unowned self] isLoading in
-            self.showLoadingIndicators(isLoading)
-        }).disposed(by: disposeBag)
+        viewModel.output.isLoading
+            .drive(onNext: { [unowned self] isLoading in
+                self.showLoadingIndicators(isLoading)
+            }).disposed(by: disposeBag)
+        
+        
+        
+        /*
         // - Error
         viewModel.output.error.drive(onNext: { [unowned self] error in
             self.showAlert(title: "Error", message: error.localizedDescription)
@@ -167,34 +201,20 @@ class CharacterListViewController: BaseViewController {
     private func showLoadingIndicators(_ isLoading: Bool) {
         if !isLoading {
             refreshControl.endRefreshing()
-            //print("endRefreshing")
         }else {
-            //print("startRefreshing")
+            
         }
     }
     
-    private func showDetailViewController(_ character: Character) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let viewController = storyboard.instantiateViewController(withIdentifier: RMCharacterDetailViewController.identifier) as? RMCharacterDetailViewController else {
-            return
-        }
-        viewController.character = character
+    private func showDetailViewController(with character: Character) {
+        let viewController = CharacterDetailViewController(character: character)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
     
-    private func fadeInOut(with cell: UICollectionViewCell) {
-        cell.alpha = 0
-        let transform = CATransform3DTranslate(CATransform3DIdentity, 0, -250, 0)
-        cell.layer.transform = transform
-        UIView.animate(withDuration: 1,
-                       delay: 0,
-                       usingSpringWithDamping: 0.7,
-                       initialSpringVelocity: 0.5,
-                       options: .curveEaseOut,
-                       animations: {
-            cell.alpha = 1
-            cell.layer.transform = CATransform3DIdentity
-        }, completion: nil)
+    private func showFilterViewController() {
+        let viewController = CharacterFilterViewController()
+        
+        self.present(viewController, animated: true)
     }
     
 }

@@ -42,21 +42,11 @@ class MainTabBarViewController: UITabBarController {
     }
     
     func setupViewController() {
-        /*
-         let rmCharacter = addChildViewController(initViewController(RMCharacterViewController.identifier),
-                                                 "Characters", "person", 0)
-        let rmLocation = addChildViewController(initViewController(RMLocationViewController.identifier),
-                                                "Locations", "location.fill", 1)
-        let rmEpisodes = addChildViewController(initViewController(RMEpisodesViewController.identifier),
-                                                "Episodes", "doc.fill", 2)
-        let rmSettings = addChildViewController(initViewController(RMSettingsViewController.identifier),
-                                                "Settings", "gearshape", 3)
-        */
-        
         let characterList = addChildViewController(CharacterListViewController(), "Characters", "person", 0)
-        viewControllers = [characterList]
-        
-        //viewControllers = [characterList, rmLocation, rmEpisodes, rmSettings]
+        let locationView = addChildViewController(LocationViewController(), "Locations", "location.fill", 1)
+        let episodesView = addChildViewController(EpisodesViewController(), "Episodes", "doc.fill", 2)
+        let settingsView = addChildViewController(SettingsViewController(), "Settings", "gearshape", 3)
+        viewControllers = [characterList, locationView, episodesView, settingsView]
     }
     
     func initViewController(_ named: String) -> UIViewController {

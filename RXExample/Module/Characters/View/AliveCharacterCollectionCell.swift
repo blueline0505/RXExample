@@ -9,13 +9,14 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class AliveCollectionCell: UICollectionViewCell {
+class AliveCharacterCollectionCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "AliveCollectionCell"
+    // MARK: Identifier
+    static let reuseIdentifier = "AliveCharacterCollectionCell"
     
     // MARK: - Dependencies
-    var viewModel = AliveCollectionCellViewModel()
-    private var disposeBag = DisposeBag()
+    var viewModel = AliveCharacterCollectionCellViewModel()
+   
     
     // MARK: - Properties
     
@@ -34,6 +35,9 @@ class AliveCollectionCell: UICollectionViewCell {
         label.numberOfLines = 2
         return label
     }()
+    
+    // MARK: - Private Properties
+    private var disposeBag = DisposeBag()
     
     // MARK: - Lifecycle
     

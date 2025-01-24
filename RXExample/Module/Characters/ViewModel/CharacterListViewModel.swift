@@ -25,7 +25,8 @@ class CharacterListViewModel: ViewModel {
     let output: Output
     
     struct Output {
-        let characters: Driver<[Character]>
+        let aliveCharacters: Driver<[Character]>
+        let otherCharacters: Driver<[Character]>
         let isLoading: Driver<Bool>
         let error: Driver<Error>
     }
@@ -35,7 +36,6 @@ class CharacterListViewModel: ViewModel {
     
     // MARK: Private properties
     private let charactersSubject = PublishSubject<[Character]>()
-    
     
     
     // MARK: Initialisation
@@ -58,8 +58,18 @@ class CharacterListViewModel: ViewModel {
                 return Driver.just([])
             }
         
+        let partCharacters = characters.map { items in
+            items.reduce(into: (alive: [Character](), other: [Character]())) { result, character in
+                if character.status == .Alive {
+                    result.alive.append(character)
+                }else {
+                    result.other.append(character)
+                }
+            }
+        }
         
-        output = Output(characters: characters,
+        output = Output(aliveCharacters: partCharacters.map { $0.alive },
+                        otherCharacters: partCharacters.map { $0.other },
                         isLoading: isLoadingSubject.asDriver(onErrorJustReturn: false),
                         error: errorSubject.asDriver(onErrorJustReturn: ErrorType.ERROR_INVAILD_OTHER_FAILLURE))
     }

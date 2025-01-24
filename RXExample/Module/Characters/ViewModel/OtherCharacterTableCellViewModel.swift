@@ -1,8 +1,8 @@
 //
-//  CharacterCollectionViewModel.swift
+//  CharacterTableViewCellViewModel.swift
 //  RXExample
 //
-//  Created by DAVIDPAN on 2025/1/23.
+//  Created by DAVIDPAN on 2023/1/13.
 //
 
 import Foundation
@@ -10,7 +10,7 @@ import UIKit.UIImage
 import RxSwift
 import RxCocoa
 
-class AliveCollectionCellViewModel: ViewModel {
+class OtherCharacterTableCellViewModel: ViewModel {
     
     // MARK: Input
     let input: Input
@@ -26,6 +26,7 @@ class AliveCollectionCellViewModel: ViewModel {
     
     struct Output {
         let titleLabelText: Driver<String>
+        let subtitleLabelText: Driver<String>
         let downloadImage: Driver<UIImage?>
     }
     
@@ -34,27 +35,26 @@ class AliveCollectionCellViewModel: ViewModel {
     private let disposeBag = DisposeBag()
     
     // MARK: Initialisation
+    
     init() {
-        
         input = Input(characterSubject: characterSubject)
         
         let titleLabelText = characterSubject
-            .map({ $0?.name ?? "" })
-            .asDriver(onErrorJustReturn: "")
+            .map { $0?.name ?? "-" }
+            .asDriver(onErrorJustReturn: "-")
         
         let subtitleLabelText = characterSubject
-            .map({ $0?.species ?? "" })
-            .asDriver(onErrorJustReturn: "")
+            .map { $0?.type ?? "-" }
+            .asDriver(onErrorJustReturn: "-")
         
         let downloadImageSubject = characterSubject
             .compactMap { $0?.imagePath }
             .flatMap { imagePath in
                 try APIMangger.shared().downloadImage(imagePath)
-            }
-            .asDriver(onErrorJustReturn: nil)
+            }.asDriver(onErrorJustReturn: nil)
         
         output = Output(titleLabelText: titleLabelText,
+                        subtitleLabelText: subtitleLabelText,
                         downloadImage: downloadImageSubject.asDriver(onErrorJustReturn: nil))
     }
-    
 }

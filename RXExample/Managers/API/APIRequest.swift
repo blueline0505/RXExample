@@ -21,18 +21,20 @@ class APIRequest {
         return Observable<T>.create { observer in
             let task = self.urlSession.dataTask(with: request) {(data, response, error) in
                 guard let httpResponse = response as? HTTPURLResponse else {
-                    return observer.onError(error!)
+                    return observer.onError(ErrorType.ERROR_REQUEST_FAILED)
                 }
                 
                 let statusCode = httpResponse.statusCode
                 guard (200...399).contains(statusCode) else {
-                    observer.onError(error!)
+                    print("DEBUG: statusCode: \(statusCode)")
+                    observer.onError(ErrorType.ERROR_BAD_STATUS_CODE)
                     return
                 }
                 do {
                     let resultData: T = try JSONDecoder().decode(T.self, from: data ?? Data())
                     observer.onNext(resultData)
                 }catch let error {
+                    print("DEBUG: error \(error)")
                     observer.onError(error)
                 }
                 observer.onCompleted()
@@ -48,11 +50,11 @@ class APIRequest {
         return Observable<Data?>.create { observer in
             let task = self.urlSession.dataTask(with: request) {(data, response, error) in
                 guard let httpResponse = response as? HTTPURLResponse else {
-                    return observer.onError(error!)
+                    return observer.onError(ErrorType.ERROR_REQUEST_FAILED)
                 }
                 let statusCode = httpResponse.statusCode
                 guard (200...399).contains(statusCode) else {
-                    observer.onError(error!)
+                    observer.onError(ErrorType.ERROR_BAD_STATUS_CODE)
                     return
                 }
                 observer.onNext(data)

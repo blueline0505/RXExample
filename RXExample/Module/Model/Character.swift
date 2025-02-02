@@ -11,7 +11,7 @@ struct Character {
     let id: Int
     let name: String
     let status: RMCharacterStatus
-    let species: String
+    let species: RMCharacterSpecie
     let type: String
     let gender: RMCharacterGender
     let origin: RMCharacterOrigin
@@ -32,7 +32,7 @@ extension Character {
         return Character(id: 1,
                          name: "Rick Sanchez",
                          status: .Alive,
-                         species: "Human",
+                         species: .unknown,
                          type: "",
                          gender: .Male,
                          origin: origin,

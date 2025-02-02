@@ -11,6 +11,7 @@ import UIKit
 import SnapKit
 
 class CharacterListViewController: BaseViewController {
+    
     // MARK: Identifier
     static let identifier = "CharacterListViewController"
     
@@ -21,6 +22,18 @@ class CharacterListViewController: BaseViewController {
     private let searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = "Search Character"
+        searchController.searchBar.tintColor = .white // cancel text color
+        searchController.searchBar.barTintColor = .white // text color
+        
+        if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField,
+           let iconView = textField.leftView as? UIImageView {
+            textField.textColor = .white // placeholder
+            textField.attributedPlaceholder = NSAttributedString(string: "Search Character",
+                                                                 attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+            
+            iconView.tintColor = .white // icon
+        }
+        
         searchController.obscuresBackgroundDuringPresentation = false
         return searchController
     }()
@@ -36,7 +49,7 @@ class CharacterListViewController: BaseViewController {
     private lazy var aliveTitleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.text = "Alive"
+        label.text = "Human"
         label.font = .systemFont(ofSize: 17, weight: .medium)
         label.textAlignment = .left
         return label
@@ -51,13 +64,13 @@ class CharacterListViewController: BaseViewController {
         return label
     }()
     
-    private lazy var aliveCharacterCollectionView: UICollectionView = {
+    private lazy var characterCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: self.view.bounds,
                                               collectionViewLayout: CharacterListCollectionFlowLayout())
         collectionView.backgroundColor = .clear
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(AliveCharacterCollectionCell.self,
-                                forCellWithReuseIdentifier: AliveCharacterCollectionCell.reuseIdentifier)
+        collectionView.register(CharacterCollectionCell.self,
+                                forCellWithReuseIdentifier: CharacterCollectionCell.reuseIdentifier)
         return collectionView
     }()
     
@@ -69,7 +82,6 @@ class CharacterListViewController: BaseViewController {
     }()
     
     // MARK: Private Properties
-   
     private let refreshSubject = PublishSubject<Void>()
     private let refreshControl = UIRefreshControl()
     private let disposeBag = DisposeBag()
@@ -83,13 +95,16 @@ class CharacterListViewController: BaseViewController {
         super.viewDidLoad()
         initView()
         bindViewModel()
-        refreshControlValueChanged()
+        //refreshControlValueChanged()
     }
     
     // MARK: Methods
     func initView() {
     
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [.foregroundColor: UIColor.white]
+        
         navigationItem.rightBarButtonItem = rightButtonItem
+        navigationItem.searchController = searchController
         
         view.addSubview(aliveTitleLabel)
         aliveTitleLabel.snp.makeConstraints { make in
@@ -98,8 +113,8 @@ class CharacterListViewController: BaseViewController {
             make.right.equalTo(view.safeAreaLayoutGuide).offset(-8)
         }
         
-        view.addSubview(aliveCharacterCollectionView)
-        aliveCharacterCollectionView.snp.makeConstraints { make in
+        view.addSubview(characterCollectionView)
+        characterCollectionView.snp.makeConstraints { make in
             make.top.equalTo(aliveTitleLabel.snp.bottom).offset(16)
             make.left.equalTo(view.safeAreaLayoutGuide)
             make.right.equalTo(view.safeAreaLayoutGuide)
@@ -108,7 +123,7 @@ class CharacterListViewController: BaseViewController {
         
         view.addSubview(otheritleLabel)
         otheritleLabel.snp.makeConstraints { make in
-            make.top.equalTo(aliveCharacterCollectionView.snp.bottom).offset(16)
+            make.top.equalTo(characterCollectionView.snp.bottom).offset(16)
             make.left.equalTo(view.safeAreaLayoutGuide).offset(8)
             make.right.equalTo(view.safeAreaLayoutGuide).offset(-8)
         }
@@ -123,6 +138,7 @@ class CharacterListViewController: BaseViewController {
         
         otherCharacterTableView.estimatedRowHeight = 140
         otherCharacterTableView.rowHeight = UITableView.automaticDimension
+      
     }
     
     func bindViewModel() {
@@ -130,27 +146,32 @@ class CharacterListViewController: BaseViewController {
         refreshSubject
             .subscribe(viewModel.input.viewDidRefresh)
             .disposed(by: disposeBag)
+       
+        searchController.searchBar.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .bind(to: viewModel.input.searchName)
+            .disposed(by: disposeBag)
         
         // Outputs
         
         // - rightBarItem
-        
         rightButtonItem.rx.tap
             .subscribe(onNext: {[weak self] in
                 self?.showFilterViewController()
             }).disposed(by: disposeBag)
         
         // - CollectionView
-        viewModel.output.aliveCharacters
-            .drive(aliveCharacterCollectionView.rx.items(cellIdentifier: AliveCharacterCollectionCell.reuseIdentifier.self,
-                                                    cellType: AliveCharacterCollectionCell.self)) {(row, data, cell) in
+        viewModel.output.characters
+            .drive(characterCollectionView.rx.items(cellIdentifier: CharacterCollectionCell.reuseIdentifier.self,
+                                                    cellType: CharacterCollectionCell.self)) {(row, data, cell) in
                 cell.configure(with: data)
             }
             .disposed(by: disposeBag)
         
-        aliveCharacterCollectionView.rx.willDisplayCell
+        characterCollectionView.rx.willDisplayCell
             .subscribe(onNext: ({ (cell, indexPath) in
-                cell.setAnimation(y: -250)
+                cell.setAnimation(y: -200)
             }))
             .disposed(by: disposeBag)
         
@@ -163,7 +184,7 @@ class CharacterListViewController: BaseViewController {
         
         otherCharacterTableView.rx.willDisplayCell
             .subscribe(onNext: ({ (cell, indexPath) in
-                cell.setAnimation(x: -250)
+                cell.setAnimation(x: -200)
             })).disposed(by: disposeBag)
         
         otherCharacterTableView.rx.modelSelected(Character.self)
@@ -177,24 +198,15 @@ class CharacterListViewController: BaseViewController {
                 self.showLoadingIndicators(isLoading)
             }).disposed(by: disposeBag)
         
-        
-        
-        /*
         // - Error
         viewModel.output.error.drive(onNext: { [unowned self] error in
             self.showAlert(title: "Error", message: error.localizedDescription)
         }).disposed(by: disposeBag)
-        */
+    
     }
     
-    /*
-    func setupRefreshControl() {
-        refreshControl.addTarget(self, action: #selector(refreshControlValueChanged), for: .valueChanged)
-        characterTableView.addSubview(refreshControl)
-    }*/
-    
-    
     @objc private func refreshControlValueChanged() {
+        print("DEBUG: refreshControlValueChanged")
         refreshSubject.onNext(())
     }
     
@@ -202,7 +214,7 @@ class CharacterListViewController: BaseViewController {
         if !isLoading {
             refreshControl.endRefreshing()
         }else {
-            
+            refreshControl.beginRefreshing()
         }
     }
     
@@ -212,7 +224,9 @@ class CharacterListViewController: BaseViewController {
     }
     
     private func showFilterViewController() {
-        let viewController = CharacterFilterViewController()
+        let viewController = CharacterFilterViewController(species: viewModel.input.speciesRelay.value,
+                                                           gender: viewModel.input.genderRelay.value,
+                                                           parentViewModel: viewModel)
         
         self.present(viewController, animated: true)
     }

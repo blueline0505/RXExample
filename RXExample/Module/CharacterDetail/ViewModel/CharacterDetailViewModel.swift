@@ -53,7 +53,7 @@ class CharacterDetailViewModel: ViewModel {
             .asDriver(onErrorJustReturn: "-")
         
         let speciesLabelTextSubject = characterSubject
-            .map { $0?.species ?? "" }
+            .map { $0?.species.rawValue ?? RMCharacterSpecie.unknown.rawValue }
             .asDriver(onErrorJustReturn: "-")
         
         let genderLabelTextSubject = characterSubject

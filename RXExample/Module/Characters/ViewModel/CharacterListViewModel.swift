@@ -17,59 +17,75 @@ class CharacterListViewModel: ViewModel {
     
     struct Input {
         let viewDidRefresh: AnyObserver<Void>
+        let searchName: AnyObserver<String>
+        let speciesRelay: BehaviorRelay<String>
+        let genderRelay: BehaviorRelay<String>
     }
-    
-    private let viewDidRefreshSubject = PublishSubject<Void>()
     
     // MARK: Outputs
     let output: Output
     
     struct Output {
-        let aliveCharacters: Driver<[Character]>
+        let characters: Driver<[Character]>
         let otherCharacters: Driver<[Character]>
         let isLoading: Driver<Bool>
         let error: Driver<Error>
     }
     
+    // MARK: Private properties
+    private let viewDidRefreshSubject = PublishSubject<Void>()
+    private let searchNameSubject = BehaviorSubject<String>(value: "")
+    private let charactersSubject = PublishSubject<[Character]>()
+    private let speciesRelay = BehaviorRelay<String>(value: "")
+    private let genderRelay = BehaviorRelay<String>(value: "")
     private let isLoadingSubject = PublishSubject<Bool>()
     private let errorSubject = PublishSubject<Error>()
     
-    // MARK: Private properties
-    private let charactersSubject = PublishSubject<[Character]>()
-    
-    
     // MARK: Initialisation
+    
+    deinit {
+        print("DEBUG: CharacterListViewModel deinit")
+    }
+    
     init() {
         let errorRelay = PublishRelay<ErrorType>()
-        input = Input(viewDidRefresh: viewDidRefreshSubject.asObserver())
+        input = Input(viewDidRefresh: viewDidRefreshSubject.asObserver(),
+                      searchName: searchNameSubject.asObserver(),
+                      speciesRelay: speciesRelay,
+                      genderRelay: genderRelay)
         
         
-        //load api data
-        let characters = viewDidRefreshSubject
-            .asObservable()
-            .startLoading(loadingSubject: isLoadingSubject)
-            .flatMapLatest({ try APIMangger.shared().getCharacters()})
-            .catchErrorCode(completion: { errorType in
-                print("DEBUG: errorType: \(errorType)")
-            })
-            .stopLoading(loadingSubject: isLoadingSubject)
-            .asDriver {(error) -> Driver<[Character]> in
-                errorRelay.accept((error as? ErrorType) ?? ErrorType.ERROR_INVAILD_OTHER_FAILLURE )
-                return Driver.just([])
+        let filterParameters = Observable.combineLatest(searchNameSubject, speciesRelay, genderRelay)
+            .distinctUntilChanged { (old, new) in
+                return old == new
             }
         
+        let characters = Observable
+            .merge(viewDidRefreshSubject.withLatestFrom(filterParameters), filterParameters)
+            .debug("viewDidRefreshSubject")
+            .startLoading(loadingSubject: isLoadingSubject)
+            .flatMapLatest {name, species, gender in
+                try APIMangger.shared().getCharacters(name: name, species: species, gender: gender)
+            }.catch { error in
+                print("DEBUG: error: \(error)")
+                errorRelay.accept(error as! ErrorType)
+                return Observable.just([])
+            }
+            .stopLoading(loadingSubject: isLoadingSubject)
+            .share(replay: 1, scope: .whileConnected)
+        
         let partCharacters = characters.map { items in
-            items.reduce(into: (alive: [Character](), other: [Character]())) { result, character in
-                if character.status == .Alive {
-                    result.alive.append(character)
+            items.reduce(into: (human: [Character](), other: [Character]())) { result, character in
+                if character.species == .human {
+                    result.human.append(character)
                 }else {
                     result.other.append(character)
                 }
             }
         }
         
-        output = Output(aliveCharacters: partCharacters.map { $0.alive },
-                        otherCharacters: partCharacters.map { $0.other },
+        output = Output(characters: partCharacters.map { $0.human }.asDriver(onErrorJustReturn: []),
+                        otherCharacters: partCharacters.map { $0.other }.asDriver(onErrorJustReturn: []),
                         isLoading: isLoadingSubject.asDriver(onErrorJustReturn: false),
                         error: errorSubject.asDriver(onErrorJustReturn: ErrorType.ERROR_INVAILD_OTHER_FAILLURE))
     }

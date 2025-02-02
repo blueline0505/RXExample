@@ -15,7 +15,7 @@ struct RMCharacter: Decodable {
     let id: Int
     let name: String
     let status: RMCharacterStatus
-    let species: String
+    let species: RMCharacterSpecie
     let type: String
     let gender: RMCharacterGender
     let origin: RMCharacterOrigin
@@ -36,17 +36,25 @@ struct RMCharacterLocation: Decodable {
     let url: String
 }
 
-enum RMCharacterStatus: String, Decodable {
+enum RMCharacterStatus: String, Decodable, CaseIterable {
     case Alive = "Alive"
     case Dead = "Dead"
     case Unknown = "unknown"
 }
 
-enum RMCharacterGender: String, Decodable {
+enum RMCharacterGender: String, Decodable, CaseIterable {
     case Female = "Female"
     case Male = "Male"
     case Genderless = "Genderless"
     case Unknown = "unknown"
+}
+
+enum RMCharacterSpecie: String, Decodable, CaseIterable {
+    case human = "Human"
+    case alien = "Alien"
+    case animal = "Animal"
+    case humanoid = "Humanoid"
+    case unknown = "unknown"
 }
 
 // MARK: - CodingKeys
@@ -85,11 +93,17 @@ extension RMCharacter {
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
         self.status = try container.decode(RMCharacterStatus.self, forKey: .status)
-        self.species = try container.decode(String.self, forKey: .species)
+        
+        do {
+            self.species = try container.decode(RMCharacterSpecie.self, forKey: .species)
+        }catch let error {
+            print("created species error:\(error.localizedDescription)")
+            self.species = .unknown
+        }
+        
         self.type = try container.decode(String.self, forKey: .type)
         self.gender = try container.decode(RMCharacterGender.self, forKey: .gender)
         self.origin = try container.decode(RMCharacterOrigin.self, forKey: .origin)
-        
         self.location = try container.decode(RMCharacterLocation.self, forKey: .location)
         self.imagePath = try container.decode(String.self, forKey: .imagePath)
         self.episode = try container.decode([String].self, forKey: .episode)

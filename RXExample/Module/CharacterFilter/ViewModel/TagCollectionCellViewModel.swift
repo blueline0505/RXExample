@@ -31,7 +31,7 @@ class TagCollectionCellViewModel: ViewModel {
     private let selectedSubject: BehaviorSubject<Bool> = .init(value: false)
     
     init() {
-        
+   
         input = Input(titleLabelSubject: titleLabelSubject, selectedSubject: selectedSubject)
         
         let titleText = titleLabelSubject.map { $0 }

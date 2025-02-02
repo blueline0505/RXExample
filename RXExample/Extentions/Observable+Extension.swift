@@ -21,21 +21,10 @@ extension Observable where Element: Any {
         })
     }
     
-//    func catchErrorCode(errorType: Observable<ErrorType>? = nil) -> Observable<Element> {
-//        return self.do(onNext: { result in
-//            
-//        })
-//    }
-    
     func catchErrorCode(completion: @escaping ((ErrorType)-> Void)) -> Observable<Element> {
         return flatMap { result in
             
-            guard let response = result as? HTTPURLResponse else {
-                completion(ErrorType.ERROR_INVAILD_DECODE_FAILURE)
-                return Observable.just(result)
-            }
-            
-            if response.statusCode != 200 {
+            if let response = result as? HTTPURLResponse, response.statusCode != 200 {
                 completion(ErrorType.ERROR_INVAILD_DECODE_FAILURE)
             }
             
@@ -44,30 +33,3 @@ extension Observable where Element: Any {
     }
 }
 
-//extension ObservableType where Element: HTTPURLResponse {
-//    func catchErrorCode(completion: @escaping ((ErrorType)-> Void)) -> Observable<Element> {
-//        return flatMap { response in
-//            
-//            if response.statusCode != 200 {
-//                completion(ErrorType.ERROR_INVAILD_DECODE_FAILURE)
-//            }
-//            
-//            return Observable.just(response)
-//        }
-//    }
-//    
-//}
-//
-//extension PrimitiveSequence where Trait == SingleTrait, Element: Sequence {
-//    
-//    func catchAPIError(errorType: Observable<ErrorType>? = nil) -> Single<Element> {
-//        return flatMap { response in
-//            
-//        
-//            
-//            
-//            return .just(response)
-//        }
-//    }
-//    
-//}

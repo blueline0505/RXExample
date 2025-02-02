@@ -21,14 +21,16 @@ class TagCollectionCell: UICollectionViewCell {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = .systemGray
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .white
         label.textAlignment = .center
         return label
     }()
     
     private lazy var mainView: UIView = {
         let view = UIView()
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.borderWidth = 1
         view.layer.cornerRadius = 8
         return view
     }()
@@ -45,6 +47,7 @@ class TagCollectionCell: UICollectionViewCell {
     }
     
     private func initView() {
+        
         addSubview(mainView)
         mainView.snp.makeConstraints { make in
             make.left.right.top.bottom.equalToSuperview()
@@ -52,10 +55,10 @@ class TagCollectionCell: UICollectionViewCell {
         
         mainView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.left.equalTo(mainView.snp.left)
-            make.right.equalTo(mainView.snp.right)
-            make.bottom.equalTo(mainView.snp.bottom)
-            make.top.equalTo(mainView.snp.top)
+            make.left.equalTo(mainView.snp.left).offset(16)
+            make.right.equalTo(mainView.snp.right).offset(-16)
+            make.bottom.equalTo(mainView.snp.bottom).offset(-8)
+            make.top.equalTo(mainView.snp.top).offset(8)
         }
         
     }
@@ -63,12 +66,13 @@ class TagCollectionCell: UICollectionViewCell {
     private func bindView() {
         disposeBag = DisposeBag()
         
-        viewModel.output.backgroundColor
-            .drive(onNext: { [weak self] color in
-                self?.mainView.backgroundColor = color
-            })
+        viewModel.output.titleText
+            .drive(titleLabel.rx.text)
             .disposed(by: disposeBag)
-                   
+        
+        viewModel.output.backgroundColor
+            .drive(mainView.rx.backgroundColor)
+            .disposed(by: disposeBag)
     }
     
     public func configure(title: String, isSelected: Bool) {

@@ -27,7 +27,7 @@ enum Environment {
 }
 
 enum RequestType {
-    case getCharacters
+    case getCharacters(_ name: String, species: String, gender: String)
     case getLocations
     case getEpisodes
     case getSingleEpisode(_ id: Int)
@@ -60,6 +60,25 @@ extension RequestType: EndPointType {
     
     var url: URL {
         switch self {
+        case .getCharacters(let name, let species, let gender):
+            
+            var components = URLComponents(string: self.baseURL + self.path)!
+    
+            var queryItems: [URLQueryItem] = []
+            if !name.isEmpty {
+                queryItems.append(URLQueryItem(name: "name", value: name))
+            }
+            
+            if !species.isEmpty {
+                queryItems.append(URLQueryItem(name: "species", value: species))
+            }
+            
+            if !gender.isEmpty {
+                queryItems.append(URLQueryItem(name: "gender", value: gender))
+            }
+            
+            components.queryItems = queryItems
+            return components.url!
         case .downloadImage(let imagePath): return URL(string: imagePath)!
         default: return URL(string: self.baseURL + self.path)!
         }

@@ -36,6 +36,8 @@ class MainTabBarViewController: UITabBarController {
         navigationBarAppearance.configureWithOpaqueBackground()
         navigationBarAppearance.backgroundColor = .fillVintage
         navigationBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().prefersLargeTitles = true
         UINavigationBar.appearance().standardAppearance = navigationBarAppearance
         UINavigationBar.appearance().compactAppearance = navigationBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
@@ -49,12 +51,6 @@ class MainTabBarViewController: UITabBarController {
         viewControllers = [characterList, locationView, episodesView, settingsView]
     }
     
-    func initViewController(_ named: String) -> UIViewController {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let viewController = storyboard.instantiateViewController(withIdentifier: named)
-        return viewController
-    }
-    
     func addChildViewController(_ childViewController: UIViewController,_ title: String,_ imageName: String,_ tag: Int) -> UINavigationController {
         let navigationViewController = UINavigationController(rootViewController: childViewController)
         navigationViewController.navigationBar.topItem?.title = title
@@ -63,5 +59,6 @@ class MainTabBarViewController: UITabBarController {
         navigationViewController.tabBarItem = tabBarItem
         return navigationViewController
     }
+    
 }
 

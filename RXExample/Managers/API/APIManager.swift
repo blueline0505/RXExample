@@ -28,12 +28,12 @@ class APIMangger {
         return _shared
     }
     
-    func getCharacters() throws -> Observable<[Character]> {
-        let type = RequestType.getCharacters
+    func getCharacters(name: String = "", species: String = "", gender: String = "") throws -> Observable<[Character]> {
+        let type = RequestType.getCharacters(name, species: species, gender: gender)
         var request = URLRequest(url: type.url)
         request.httpMethod = type.method.rawValue
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        return apiRequest.callRequest(request: request).map{(data: RMCharacterResponse) in
+        return apiRequest.callRequest(request: request).map {(data: RMCharacterResponse) in
             return data.getData()
         }
     }

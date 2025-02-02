@@ -9,8 +9,7 @@
   -使用到library: RXDataSouce、Moya  
 * 結果:
   <p float="left">
-    <img src='https://github.com/blueline0505/RXExample/blob/main/result/IMG_2344.PNG' width='40%'>  
-    <img src='https://github.com/blueline0505/RXExample/blob/main/result/IMG_2345.PNG' width='40%'>
+    <img src='https://github.com/blueline0505/RXExample/blob/main/result/character_result.gif' width='40%'>  
   </p>
 * 來源:  
   1.API來源: [rickandmortyapi](https://rickandmortyapi.com/documentation/)
